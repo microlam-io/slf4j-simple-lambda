@@ -25,17 +25,19 @@
 package org.slf4j.impl;
 
 import org.slf4j.ILoggerFactory;
-import org.slf4j.LoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
 
 /**
- * The binding of {@link LoggerFactory} class with an actual instance of
- * {@link ILoggerFactory} is performed using information returned by this class.
+ * As of SLF4J version 1.8.0, the static binder mechanism  is no longer supported. 
  * 
+ * <p>This class exists to alert the user that the version of slf4j-api.jar on the class path is less 
+ * than 1.8.0 where the provider in which this class is packaged expects version 1.8.0 or later.
  * 
  * @author Ceki G&uuml;lc&uuml;
  */
 public class StaticLoggerBinder implements LoggerFactoryBinder {
+
+    final static String ERROR_MSG = "The static binder mechanism is no longer supported.";
 
     /**
      * The unique instance of this class.
@@ -52,30 +54,17 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
         return SINGLETON;
     }
 
-    /**
-     * Declare the version of the SLF4J API this implementation is compiled against. 
-     * The value of this field is modified with each major release. 
-     */
     // to avoid constant folding by the compiler, this field must *not* be final
-    public static String REQUESTED_API_VERSION = "1.6.99"; // !final
-
-    private static final String loggerFactoryClassStr = SimpleLoggerFactory.class.getName();
-
-    /**
-     * The ILoggerFactory instance returned by the {@link #getLoggerFactory}
-     * method should always be the same object
-     */
-    private final ILoggerFactory loggerFactory;
+    public static String REQUESTED_API_VERSION = "1.8.99"; // !final
 
     private StaticLoggerBinder() {
-        loggerFactory = new SimpleLoggerFactory();
     }
 
     public ILoggerFactory getLoggerFactory() {
-        return loggerFactory;
+        throw new UnsupportedOperationException(ERROR_MSG);
     }
 
     public String getLoggerFactoryClassStr() {
-        return loggerFactoryClassStr;
+        throw new UnsupportedOperationException(ERROR_MSG);
     }
 }
