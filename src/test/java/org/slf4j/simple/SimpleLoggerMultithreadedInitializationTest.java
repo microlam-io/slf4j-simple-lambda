@@ -22,7 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.helpers;
+package org.slf4j.simple;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -32,7 +32,8 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.LoggerFactoryFriend;
-import org.slf4j.impl.SimpleLogger;
+import org.slf4j.testHarness.MultithreadedInitializationTest;
+import org.slf4j.simple.SimpleLogger;
 
 public class SimpleLoggerMultithreadedInitializationTest extends MultithreadedInitializationTest {
     // final static int THREAD_COUNT = 4 + Runtime.getRuntime().availableProcessors() * 2;

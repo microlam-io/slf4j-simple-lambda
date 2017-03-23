@@ -1,4 +1,4 @@
-package org.slf4j.impl;
+package org.slf4j.simple;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 import org.slf4j.helpers.Util;
-import org.slf4j.impl.OutputChoice.OutputChoiceType;
+import org.slf4j.simple.OutputChoice.OutputChoiceType;
 
 /**
  * This class holds configuration values for {@link SimpleLogger}. The

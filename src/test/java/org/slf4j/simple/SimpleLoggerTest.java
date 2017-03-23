@@ -22,7 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.impl;
+package org.slf4j.simple;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -36,6 +36,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.slf4j.simple.*;
 public class SimpleLoggerTest {
 
     String A_KEY = SimpleLogger.LOG_KEY_PREFIX + "a";
@@ -104,7 +105,7 @@ public class SimpleLoggerTest {
         System.setErr(replacement);
         simpleLogger.info("hello");
         replacement.flush();
-        assertTrue(bout.toString().contains("INFO org.slf4j.impl.SimpleLoggerTest - hello"));
+        assertTrue(bout.toString().contains("INFO "+this.getClass().getName()+" - hello"));
     }
 
     @Test
@@ -118,6 +119,6 @@ public class SimpleLoggerTest {
 
         simpleLogger.info("hello");
         replacement.flush();
-        assertTrue(bout.toString().contains("INFO org.slf4j.impl.SimpleLoggerTest - hello"));
+        assertTrue(bout.toString().contains("INFO "+this.getClass().getName()+" - hello"));
     }
 }

@@ -1,4 +1,4 @@
-package org.slf4j.impl;
+package org.slf4j.simple;
 
 import org.slf4j.ILoggerFactory;
 import org.slf4j.IMarkerFactory;
@@ -16,9 +16,9 @@ public class SimpleServiceProvider implements SLF4JServiceProvider {
     // to avoid constant folding by the compiler, this field must *not* be final
     public static String REQUESTED_API_VERSION = "1.8.99"; // !final
 
-    private ILoggerFactory loggerFactory = new SimpleLoggerFactory();
-    private IMarkerFactory markerFactory = new BasicMarkerFactory();
-    private MDCAdapter mdcAdapter = new NOPMDCAdapter();
+    private ILoggerFactory loggerFactory; 
+    private IMarkerFactory markerFactory;
+    private MDCAdapter mdcAdapter;
                     
     public ILoggerFactory getLoggerFactory() {
         return loggerFactory;
@@ -36,4 +36,13 @@ public class SimpleServiceProvider implements SLF4JServiceProvider {
         return REQUESTED_API_VERSION;
     }
 
+
+    @Override
+    public void initialize() {
+
+          loggerFactory = new SimpleLoggerFactory();
+          markerFactory = new BasicMarkerFactory();
+          mdcAdapter = new NOPMDCAdapter();
+    }
+    
 }

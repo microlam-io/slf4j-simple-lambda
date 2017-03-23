@@ -22,7 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j;
+package org.slf4j.simple;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,6 +30,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactoryFriend;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +50,8 @@ import org.junit.Test;
 public class DetectLoggerNameMismatchTest {
 
     private static final String MISMATCH_STRING = "Detected logger name mismatch";
+
+    static String NAME_OF_THIS_CLASS = DetectLoggerNameMismatchTest.class.getName();
 
     private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     private final PrintStream oldErr = System.err;
@@ -90,8 +95,8 @@ public class DetectLoggerNameMismatchTest {
     public void testTriggerWholeMessage() {
         setTrialEnabled(true);
         LoggerFactory.getLogger(String.class);
-        boolean success = String.valueOf(byteArrayOutputStream).contains(
-                        "Detected logger name mismatch. Given name: \"java.lang.String\"; " + "computed name: \"org.slf4j.DetectLoggerNameMismatchTest\".");
+        boolean success = String.valueOf(byteArrayOutputStream)
+                        .contains("Detected logger name mismatch. Given name: \"java.lang.String\"; " + "computed name: \"" + NAME_OF_THIS_CLASS + "\".");
         assertTrue("Actual value of byteArrayOutputStream: " + String.valueOf(byteArrayOutputStream), success);
     }
 
@@ -102,7 +107,7 @@ public class DetectLoggerNameMismatchTest {
     public void testPassIfMatch() {
         setTrialEnabled(true);
         Logger logger = LoggerFactory.getLogger(DetectLoggerNameMismatchTest.class);
-        assertEquals("org.slf4j.DetectLoggerNameMismatchTest", logger.getName());
+        assertEquals(DetectLoggerNameMismatchTest.class.getName(), logger.getName());
         assertMismatchDetected(false);
     }
 
@@ -114,7 +119,7 @@ public class DetectLoggerNameMismatchTest {
     public void verifyLoggerDefinedInBaseWithOverridenGetClassMethod() {
         setTrialEnabled(true);
         Square square = new Square();
-        assertEquals("org.slf4j.Square", square.logger.getName());
+        assertEquals(Square.class.getName(), square.logger.getName());
         assertMismatchDetected(false);
     }
 
@@ -122,7 +127,7 @@ public class DetectLoggerNameMismatchTest {
         // The system property is read into a static variable at initialization time
         // so we cannot just reset the system property to test this feature.
         // Therefore we set the variable directly.
-        LoggerFactory.DETECT_LOGGER_NAME_MISMATCH = enabled;
+        LoggerFactoryFriend.setDetectLoggerNameMismatch(enabled);
     }
 }
 
