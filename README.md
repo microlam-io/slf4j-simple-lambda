@@ -19,7 +19,7 @@ The problem is even worst when we need to compile natively using graalVM native-
 ## Maven configuration
 
 With property:
-```
+```pom.xml
 	<properties>
 		<slf4j.version>2.0.0-alpha1</slf4j.version>
 	</properties>
@@ -28,7 +28,7 @@ With property:
 
 And dependencies:
 
-```
+```pom.xml
 <dependency>
     <groupId>io.microlam</groupId>
     <artifactId>slf4j-simple-lambda</artifactId>
@@ -54,9 +54,9 @@ And dependencies:
 </dependency>
 ```
 
-Be sure to exclude dependencies to avoid conflicts, for example:
+Be sure to exclude dependencies to avoid any version conflict, for example:
 
-```
+```pom.xml
 <dependency>
   <groupId>software.amazon.awssdk</groupId>
   <artifactId>dynamodb</artifactId>
@@ -69,9 +69,11 @@ Be sure to exclude dependencies to avoid conflicts, for example:
 </dependency>
 ```    
 
-## Configuration: simplelogger.properties
+## Configuration
 
-```
+Put a file named ```simplelogger.properties``` accessible as a resource, for example in ```src/main/resources/``` folder:
+
+```simplelogger.properties
 # # SLF4J's SimpleLogger configuration file
 # Simple implementation of Logger that sends all enabled log messages, for all defined loggers, to Lambda logger or System.err.
 # Must be one of ("System.err", "System.out", "LAMBDA", or custom file path).
