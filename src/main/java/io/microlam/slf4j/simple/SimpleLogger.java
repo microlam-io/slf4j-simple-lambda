@@ -53,8 +53,8 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
  *
  * <ul>
  * <li><code>org.slf4j.simpleLogger.logFile</code> - The output target which can
- * be the <em>path</em> to a file, or the special values "System.out" and
- * "System.err". Default is "System.err".</li>
+ * be the <em>path</em> to a file, or the special values "LAMBDA", "System.out" and
+ * "System.err". Default is "LAMBDA".</li>
  * 
  * <li><code>org.slf4j.simpleLogger.cacheOutputStream</code> - If the output
  * target is set to "System.out" or "System.err" (see preceding entry), by
@@ -75,6 +75,10 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
  * unspecified, the level of nearest parent logger will be used, and if none is
  * set, then the value specified by
  * <code>org.slf4j.simpleLogger.defaultLogLevel</code> will be used.</li>
+ *
+ * <li><code>org.slf4j.simpleLogger.showAWSRequestId</code> - Set to <code>true</code>
+ * if you want to output the current aws request id. Defaults to true but really 
+ * applicable only when <code>org.slf4j.simpleLogger.logFile=LAMBDA</code>.</li>
  *
  * <li><code>org.slf4j.simpleLogger.showDateTime</code> - Set to
  * <code>true</code> if you want the current date and time to be included in
@@ -148,6 +152,7 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
  * @author Rod Waldhoff
  * @author Robert Burrell Donkin
  * @author C&eacute;drik LIME
+ * @author Frank Afriat
  */
 public class SimpleLogger extends LegacyAbstractLogger {
 
@@ -383,9 +388,9 @@ public class SimpleLogger extends LegacyAbstractLogger {
 	 * This is our internal implementation for logging regular (non-parameterized)
 	 * log messages.
 	 *
-	 * @param level   One of the LOG_LEVEL_XXX constants defining the log level
-	 * @param message The message itself
-	 * @param t       The exception whose stack trace should be logged
+	 * @param level   		 One of the LOG_LEVEL_XXX constants defining the log level
+	 * @param messagePattern The message itself
+	 * @param t       		 The exception whose stack trace should be logged
 	 */
 	@Override
 	protected void handleNormalizedLoggingCall(Level level, Marker marker, String messagePattern, Object[] arguments,
