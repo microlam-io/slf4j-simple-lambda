@@ -19,16 +19,15 @@ The problem is even worst when we need to compile natively using graalVM native-
 ## Maven configuration
 
 With property:
-```pom.xml
-	<properties>
-		<slf4j.version>2.0.0-alpha1</slf4j.version>
-	</properties>
-
+``` pom.xml
+<properties>
+	<slf4j.version>2.0.0-alpha1</slf4j.version>
+</properties>
 ```
 
 And dependencies:
 
-```pom.xml
+``` pom.xml
 <dependency>
     <groupId>io.microlam</groupId>
     <artifactId>slf4j-simple-lambda</artifactId>
@@ -56,7 +55,7 @@ And dependencies:
 
 Be sure to exclude dependencies to avoid any version conflict, for example:
 
-```pom.xml
+``` pom.xml
 <dependency>
   <groupId>software.amazon.awssdk</groupId>
   <artifactId>dynamodb</artifactId>
@@ -69,8 +68,9 @@ Be sure to exclude dependencies to avoid any version conflict, for example:
 </dependency>
 ```    
 
-## Configuration
+## Runtime Configuration
 
+### Use file simplelogger.properties
 Put a file named ```simplelogger.properties``` accessible as a resource, for example in ```src/main/resources/``` folder:
 
 ```simplelogger.properties
@@ -118,4 +118,15 @@ Put a file named ```simplelogger.properties``` accessible as a resource, for exa
 # Defaults to false.
 #org.slf4j.simpleLogger.showShortLogName=false
 ```
+
+### Configure Runtime Environment Properties
+
+you may also override these properties from the Environment Properties:
+
+for example, on java command line: 
+```start.sh
+-Dorg.slf4j.simpleLogger.showAWSRequestId=false
+```
+
+or for example by setting ```org_slf4j_simpleLogger_log_software_amazon_awssdk_request``` env property with value ```debug``` from AWS Lambda Console 
 
