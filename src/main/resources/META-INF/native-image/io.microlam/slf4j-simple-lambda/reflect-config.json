@@ -1,0 +1,19 @@
+[
+{
+  "name":"org.slf4j.simple.SimpleServiceProvider",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allPublicMethods":true
+},
+{
+  "name":"org.apache.log4j.MDC",
+  "methods":[{"name":"<init>","parameterTypes":[] }],
+  "allPublicMethods":true
+}
+]
+
+
+
+
+
+
+
