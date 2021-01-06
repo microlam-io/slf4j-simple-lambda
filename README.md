@@ -31,7 +31,7 @@ And dependencies:
 <dependency>
     <groupId>io.microlam</groupId>
     <artifactId>slf4j-simple-lambda</artifactId>
-    <version>${slf4j.version}</version>
+    <version>${slf4j.version}_1.0</version>
 </dependency>
 
 <dependency> 
