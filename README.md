@@ -31,7 +31,7 @@ And dependencies:
 <dependency>
     <groupId>io.microlam</groupId>
     <artifactId>slf4j-simple-lambda</artifactId>
-    <version>${slf4j.version}_1.0</version>
+    <version>${slf4j.version}_1.1</version>
 </dependency>
 
 <dependency> 
@@ -43,7 +43,8 @@ And dependencies:
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-lambda-java-core</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
+    <scope>provided</scope>
 </dependency>
 
 <dependency>
@@ -53,7 +54,28 @@ And dependencies:
 </dependency>
 ```
 
-Be sure to exclude dependencies to avoid any version conflict, for example:
+**Remarks**: When inside a Lambda with the Standard Java Runtime you will need to be sure to not include this dependency from your code (so you may use only the scope provided) as above:
+
+``` pom.xml
+<dependency>
+    <groupId>com.amazonaws</groupId>
+    <artifactId>aws-lambda-java-core</artifactId>
+    <version>1.2.1</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+But in case you are compiling your lambda and using the Custom Runtime, you will need to include the dependency:
+
+ ``` pom.xml
+<dependency>
+    <groupId>com.amazonaws</groupId>
+    <artifactId>aws-lambda-java-core</artifactId>
+    <version>1.2.1</version>
+</dependency>
+```
+
+Be sure to also exclude dependencies to avoid any version conflict, for example for slf4j-api:
 
 ``` pom.xml
 <dependency>
@@ -66,11 +88,12 @@ Be sure to exclude dependencies to avoid any version conflict, for example:
       </exclusion>
   </exclusions>  
 </dependency>
-```    
+```
 
 ## Runtime Configuration
 
 ### Use file simplelogger.properties
+
 Put a file named ```simplelogger.properties``` accessible as a resource, for example in ```src/main/resources/``` folder:
 
 ```simplelogger.properties
@@ -117,13 +140,19 @@ Put a file named ```simplelogger.properties``` accessible as a resource, for exa
 # Set to true if you want the last component of the name to be included in output messages.
 # Defaults to false.
 #org.slf4j.simpleLogger.showShortLogName=false
+
+# The newlineMethod is operating before sending to log stream.
+# Must be one of ("none", "manual", "auto").
+# Defaults to auto.
+#org.slf4j.simpleLogger.newlineMethod=auto
 ```
 
 ### Configure Runtime Environment Properties
 
 you may also override these properties from the Environment Properties:
 
-for example, on java command line: 
+for example, on java command line:
+
 ```start.sh
 -Dorg.slf4j.simpleLogger.showAWSRequestId=false
 ```

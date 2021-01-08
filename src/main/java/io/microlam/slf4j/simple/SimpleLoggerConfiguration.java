@@ -31,6 +31,10 @@ import io.microlam.slf4j.simple.OutputChoice.OutputChoiceType;
  */
 public class SimpleLoggerConfiguration {
 
+    enum NewlineMethod {
+        None, Manual;
+    }
+
     private static final String CONFIGURATION_FILE = "simplelogger.properties";
 
     static int DEFAULT_LOG_LEVEL_DEFAULT = SimpleLogger.LOG_LEVEL_INFO;
@@ -69,6 +73,9 @@ public class SimpleLoggerConfiguration {
     private static final String WARN_LEVELS_STRING_DEFAULT = "WARN";
     String warnLevelString = WARN_LEVELS_STRING_DEFAULT;
 
+    private static final String NEWLINE_METHOD_DEFAULT = "Auto";
+    NewlineMethod newlineMethod = NewlineMethod.None;
+
     private final Properties properties = new Properties();
 
     void init() {
@@ -92,6 +99,9 @@ public class SimpleLoggerConfiguration {
         cacheOutputStream = getBooleanProperty(SimpleLogger.CACHE_OUTPUT_STREAM_STRING_KEY, CACHE_OUTPUT_STREAM_DEFAULT);
         outputChoice = computeOutputChoice(logFile, cacheOutputStream);
 
+        String newlineMethodStr = getStringProperty(SimpleLogger.NEWLINE_METHOD_KEY, NEWLINE_METHOD_DEFAULT);
+        newlineMethod = stringToNewlineMethod(newlineMethodStr);
+        
         if (dateTimeFormatStr != null) {
             try {
                 dateFormatter = new SimpleDateFormat(dateTimeFormatStr);
@@ -168,6 +178,20 @@ public class SimpleLoggerConfiguration {
         return SimpleLogger.LOG_LEVEL_INFO;
     }
 
+    static NewlineMethod stringToNewlineMethod(String newlineMethodStr) {
+    	String lowercase = newlineMethodStr.toLowerCase();
+    	switch(lowercase) {
+    		case "none": return NewlineMethod.None;
+    		case "auto": {
+    			String mode = System.getenv("_LAMBDA_TELEMETRY_LOG_FD"); 
+    			return (mode == null)?NewlineMethod.Manual:NewlineMethod.None;
+    		}
+    		case "manual": return NewlineMethod.Manual;
+    		default : return NewlineMethod.None;
+    	}
+    }
+
+    
     private static OutputChoice computeOutputChoice(String logFile, boolean cacheOutputStream) {
         if ("System.err".equalsIgnoreCase(logFile))
             if (cacheOutputStream)

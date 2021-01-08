@@ -6,7 +6,7 @@
 
     <groupId>io.microlam</groupId>
 	<artifactId>slf4j-simple-lambda</artifactId>
-    <version>${slf4j.version}_1.0</version>
+    <version>${slf4j.version}_1.1</version>
 	<packaging>jar</packaging>
   	<name>SLF4J Simple Binding for AWS Lambda</name>
   	<description>SLF4J Simple binding for AWS Lambda</description>
@@ -150,7 +150,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-lambda-java-core</artifactId>
-      <version>1.2.0</version>
+      <version>1.2.1</version>
       <scope>provided</scope>
     </dependency>
     
