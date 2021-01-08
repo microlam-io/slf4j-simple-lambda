@@ -43,6 +43,8 @@ import org.slf4j.spi.MDCAdapter;
 
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
+import io.microlam.slf4j.simple.SimpleLoggerConfiguration.NewlineMethod;
+
 
 /**
  * <p>
@@ -108,6 +110,10 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
  *
  * <li><code>org.slf4j.simpleLogger.warnLevelString</code> - The string value
  * output for the warn level. Defaults to <code>WARN</code>.</li>
+ * 
+ * <li><code>org.slf4j.simpleLogger.newlineMethod</code> - The newlineMethod
+ * to use. Must be one of ("none", "manual", "auto"). If not specified, defaults
+ * to "auto".</li>
  * 
  * </ul>
  *
@@ -228,6 +234,8 @@ public class SimpleLogger extends LegacyAbstractLogger {
 
 	public static final String DEFAULT_LOG_LEVEL_KEY = SimpleLogger.SYSTEM_PREFIX + "defaultLogLevel";
 
+	public static final String NEWLINE_METHOD_KEY = SimpleLogger.SYSTEM_PREFIX + "newlineMethod";
+	
 	/**
 	 * Package access allows only {@link SimpleLoggerFactory} to instantiate
 	 * SimpleLogger instances.
@@ -268,38 +276,35 @@ public class SimpleLogger extends LegacyAbstractLogger {
 		return levelString;
 	}
 
+	static String useNewlineMethod(String none) {
+		if (CONFIG_PARAMS.newlineMethod == NewlineMethod.None) {
+			return none;
+		}
+		String manual = none.replace('\n', '\r') + '\n';
+		return manual;
+	}
 
 	void write(StringBuilder buf, Throwable t) {
+		String toLog = printWithThrowable(buf, t);
 		if (CONFIG_PARAMS.outputChoice.isLambda())  {
 			LambdaLogger lambdaLogger = CONFIG_PARAMS.outputChoice.getLambdaLogger();
-			if (t == null) {
-				lambdaLogger.log(buf.toString());
-			}
-			else {
-				writeWithThrowable(buf, t, lambdaLogger);
-			}
+			lambdaLogger.log(toLog);
 		}
 		else {
 			PrintStream targetStream = CONFIG_PARAMS.outputChoice.getTargetPrintStream();
-	
-			targetStream.println(buf.toString());
-			writeThrowable(t, targetStream);
+			targetStream.print(toLog);
 			targetStream.flush();
 		}
 	}
 
-	protected void writeThrowable(Throwable t, PrintStream targetStream) {
-		if (t != null) {
-			t.printStackTrace(targetStream);
-		}
-	}
-
-	protected void writeWithThrowable(StringBuilder buf, Throwable t, LambdaLogger lambdaLogger) {
+	protected String printWithThrowable(StringBuilder buf, Throwable t) {
 			StringWriter sw = new StringWriter();
 			sw.append(buf);
-			sw.append('\n');
-			t.printStackTrace(new PrintWriter(sw));			
-			lambdaLogger.log(sw.toString());
+			if (t != null) {
+				sw.append('\n');
+				t.printStackTrace(new PrintWriter(sw));
+			}
+			return useNewlineMethod(sw.toString());
 	}
 
 	private String getFormattedDate() {
