@@ -48,6 +48,12 @@ And dependencies:
 </dependency>
 
 <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-api</artifactId>
+    <version>2.13.0</version>
+</dependency>
+
+<dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>log4j-over-slf4j</artifactId>
     <version>2.0.0-alpha1</version>
