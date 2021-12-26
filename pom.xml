@@ -6,7 +6,7 @@
 
     <groupId>io.microlam</groupId>
 	<artifactId>slf4j-simple-lambda</artifactId>
-    <version>${slf4j.version}_1.1</version>
+    <version>${slf4j.version}_1.2</version>
 	<packaging>jar</packaging>
   	<name>SLF4J Simple Binding for AWS Lambda</name>
   	<description>SLF4J Simple binding for AWS Lambda</description>
@@ -35,19 +35,19 @@
 	 </developers>
 
 	<scm>
-	  <connection>scm:git:git://github.com/microlam-io/slf4j-simple-lambda.git</connection>
-	  <developerConnection>scm:git:ssh://github.com:microlam-io/slf4j-simple-lambda.git</developerConnection>
-	  <url>https://github.com/microlam-io/slf4j-simple-lambda/tree/master</url>
+	  <connection>scm:git:git://github.com/microlam-io/${project.artifactId}.git</connection>
+	  <developerConnection>scm:git:ssh://github.com:microlam-io/${project.artifactId}.git</developerConnection>
+	  <url>https://github.com/microlam-io/${project.artifactId}/tree/master</url>
 	</scm>
 
 	<distributionManagement>
 	  <snapshotRepository>
 	    <id>ossrh</id>
-	    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+	    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 	  </snapshotRepository>
 	  <repository>
     	<id>ossrh</id>
-    	<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    	<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
   	  </repository>
 	</distributionManagement>
 
@@ -131,14 +131,35 @@
 	      <extensions>true</extensions>
 	      <configuration>
 	        <serverId>ossrh</serverId>
-	        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+	        <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 	        <autoReleaseAfterClose>true</autoReleaseAfterClose>
 	      </configuration>
+        <dependencies>
+        <dependency>
+          <groupId>com.thoughtworks.xstream</groupId>
+          <artifactId>xstream</artifactId>
+          <version>1.4.15</version> <!-- apparently this needs to be exactly this version -->
+        </dependency>
+      </dependencies>
     	</plugin>
     	
 	</plugins>
 	
 </build>
+
+  <dependencyManagement>
+    <dependencies>
+ 
+	<dependency>
+      <groupId>io.microlam</groupId>
+      <artifactId>microlam-bom</artifactId>
+      <version>0.2</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+
+  </dependencies>
+  </dependencyManagement>
 
   <dependencies>
   
@@ -151,7 +172,6 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-lambda-java-core</artifactId>
-      <version>1.2.1</version>
       <scope>provided</scope>
     </dependency>
     
@@ -163,12 +183,11 @@
       <scope>test</scope>
     </dependency>
     
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
+	<dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <scope>test</scope>
+	</dependency>
     
   </dependencies>
 
