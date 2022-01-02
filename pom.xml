@@ -6,7 +6,7 @@
 
     <groupId>io.microlam</groupId>
 	<artifactId>slf4j-simple-lambda</artifactId>
-    <version>${slf4j.version}_1.2</version>
+    <version>${slf4j.version}_1.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
   	<name>SLF4J Simple Binding for AWS Lambda</name>
   	<description>SLF4J Simple binding for AWS Lambda</description>
@@ -36,7 +36,7 @@
 
 	<scm>
 	  <connection>scm:git:git://github.com/microlam-io/${project.artifactId}.git</connection>
-	  <developerConnection>scm:git:ssh://github.com:microlam-io/${project.artifactId}.git</developerConnection>
+	  <developerConnection>scm:git:ssh://git@github.com/microlam-io/${project.artifactId}.git</developerConnection>
 	  <url>https://github.com/microlam-io/${project.artifactId}/tree/master</url>
 	</scm>
 
@@ -143,23 +143,15 @@
       </dependencies>
     	</plugin>
     	
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>3.0.0-M4</version>
+      </plugin>
+
 	</plugins>
 	
 </build>
-
-  <dependencyManagement>
-    <dependencies>
- 
-	<dependency>
-      <groupId>io.microlam</groupId>
-      <artifactId>microlam-bom</artifactId>
-      <version>0.2</version>
-      <type>pom</type>
-      <scope>import</scope>
-    </dependency>
-
-  </dependencies>
-  </dependencyManagement>
 
   <dependencies>
   
@@ -172,6 +164,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-lambda-java-core</artifactId>
+	  <version>1.2.0</version>
       <scope>provided</scope>
     </dependency>
     
@@ -186,6 +179,7 @@
 	<dependency>
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
+		<version>4.13.2</version>
 	    <scope>test</scope>
 	</dependency>
     
