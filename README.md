@@ -31,7 +31,7 @@ And dependencies:
 <dependency>
     <groupId>io.microlam</groupId>
     <artifactId>slf4j-simple-lambda</artifactId>
-    <version>${slf4j.version}_1.2</version>
+    <version>${slf4j.version}_1.3</version>
 </dependency>
 
 <dependency> 
@@ -43,7 +43,7 @@ And dependencies:
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-lambda-java-core</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.0</version>
     <scope>provided</scope>
 </dependency>
 
@@ -66,7 +66,7 @@ And dependencies:
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-lambda-java-core</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.0</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -77,7 +77,7 @@ But in case you are compiling your lambda and using the Custom Runtime, you will
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-lambda-java-core</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
