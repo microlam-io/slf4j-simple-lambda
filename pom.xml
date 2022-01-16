@@ -5,7 +5,7 @@
 
     <groupId>io.microlam</groupId>
 	<artifactId>slf4j-simple-lambda</artifactId>
-    <version>2.0.0-alpha5_1.3</version>
+    <version>2.0.0-alpha6</version>
 	<packaging>jar</packaging>
   	<name>SLF4J Simple Binding for AWS Lambda</name>
   	<description>SLF4J Simple binding for AWS Lambda</description>
