@@ -1,4 +1,7 @@
 # slf4j-simple-lambda
+
+![Maven Central](https://img.shields.io/maven-central/v/io.microlam/slf4j-simple-lambda)
+
 Fork of slf4j-simple for logging from AWS Lambda
 
 # The problem
