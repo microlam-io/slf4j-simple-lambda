@@ -58,7 +58,7 @@ public class SimpleLoggerConfiguration {
     private static final boolean SHOW_THREAD_ID_DEFAULT = false;
     boolean showThreadId = SHOW_THREAD_ID_DEFAULT;
 
-    private static final boolean SHOW_AWS_REQUEST_ID_DEFAULT = true;
+    private static final boolean SHOW_AWS_REQUEST_ID_DEFAULT = false;
     boolean showAWSRequestId = SHOW_AWS_REQUEST_ID_DEFAULT;
 
     final static boolean SHOW_LOG_NAME_DEFAULT = true;

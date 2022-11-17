@@ -77,6 +77,10 @@ import io.microlam.slf4j.simple.SimpleLoggerConfiguration.NewlineMethod;
  * set, then the value specified by
  * <code>org.slf4j.simpleLogger.defaultLogLevel</code> will be used.</li>
  *
+ * <li><code>org.slf4j.simpleLogger.showAWSRequestId</code> - Set to <code>true</code>
+ * if you want to output the current aws request id. Defaults to false. Really 
+ * useful only when <code>org.slf4j.simpleLogger.logFile=LAMBDA</code>.</li>
+ *
  * <li><code>org.slf4j.simpleLogger.showDateTime</code> - Set to
  * <code>true</code> if you want the current date and time to be included in
  * output messages. Default is <code>false</code></li>
@@ -109,6 +113,10 @@ import io.microlam.slf4j.simple.SimpleLoggerConfiguration.NewlineMethod;
  *
  * <li><code>org.slf4j.simpleLogger.warnLevelString</code> - The string value
  * output for the warn level. Defaults to <code>WARN</code>.</li>
+ * 
+ * <li><code>org.slf4j.simpleLogger.newlineMethod</code> - The newlineMethod
+ * to use. Must be one of ("none", "manual", "auto"). If not specified, defaults
+ * to "auto".</li>
  * 
  * </ul>
  *
@@ -193,7 +201,7 @@ public class SimpleLogger extends LegacyAbstractLogger {
         CONFIG_PARAMS.init();
     }
     
-	protected MDCAdapter mdcAdapter;
+	protected final MDCAdapter mdcAdapter;
 
 
     /** The current log level */
@@ -238,6 +246,10 @@ public class SimpleLogger extends LegacyAbstractLogger {
      * SimpleLogger instances.
      */
     SimpleLogger(String name) {
+    	this(name, null);
+    }
+
+	SimpleLogger(String name, MDCAdapter mdcAdapter) {
         this.name = name;
 
         String levelString = recursivelyComputeLevelString();
@@ -246,10 +258,6 @@ public class SimpleLogger extends LegacyAbstractLogger {
         } else {
             this.currentLogLevel = CONFIG_PARAMS.defaultLogLevel;
         }
-    }
-
-	SimpleLogger(String name, MDCAdapter mdcAdapter) {
-		this(name);
 		this.mdcAdapter = mdcAdapter;
 	}
 

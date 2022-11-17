@@ -48,8 +48,8 @@ public class SimpleLoggerFactory implements ILoggerFactory {
 
     public SimpleLoggerFactory(MDCAdapter mdcAdapter) {
         loggerMap = new ConcurrentHashMap<String, Logger>();
-        SimpleLogger.lazyInit();
         this.mdcAdapter = mdcAdapter;
+        SimpleLogger.lazyInit();
     }
 
     /**
