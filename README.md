@@ -24,7 +24,7 @@ The problem is even worst when we need to compile natively using graalVM native-
 With property:
 ``` pom.xml
 <properties>
-	<slf4j.version>2.0.0-alpha5</slf4j.version>
+	<slf4j.version>2.0.3</slf4j.version>
 </properties>
 ```
 
@@ -34,7 +34,7 @@ And dependencies:
 <dependency>
     <groupId>io.microlam</groupId>
     <artifactId>slf4j-simple-lambda</artifactId>
-    <version>${slf4j.version}_1.3</version>
+    <version>${slf4j.version}_1</version>
 </dependency>
 
 <dependency> 
@@ -53,7 +53,7 @@ And dependencies:
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-api</artifactId>
-    <version>2.13.0</version>
+    <version>2.19.0</version>
 </dependency>
 
 <dependency>
