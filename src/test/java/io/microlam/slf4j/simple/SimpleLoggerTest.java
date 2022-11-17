@@ -37,8 +37,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.microlam.slf4j.simple.SimpleLogger;
-
 public class SimpleLoggerTest {
 
     String A_KEY = SimpleLogger.LOG_KEY_PREFIX + "a";
@@ -105,7 +103,7 @@ public class SimpleLoggerTest {
     public void checkUseOfLastSystemStreamReference() {
         SimpleLogger.init();
         SimpleLogger simpleLogger = new SimpleLogger(this.getClass().getName());
-
+ 
         System.setErr(replacement);
         simpleLogger.info("hello");
         replacement.flush();
@@ -114,6 +112,7 @@ public class SimpleLoggerTest {
 
     @Test
     public void checkUseOfCachedOutputStream() {
+//    	System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.err");
         System.setErr(replacement);
         System.setProperty(SimpleLogger.CACHE_OUTPUT_STREAM_STRING_KEY, "true");
         SimpleLogger.init();
@@ -128,14 +127,16 @@ public class SimpleLoggerTest {
 
     @Test
     public void testTheadIdWithoutThreadName() {
-        System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, Boolean.FALSE.toString());
-        String patternStr = "^tid=\\d{1,12} INFO org.slf4j.simple.SimpleLoggerTest - hello";
+//    	System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.err");
+    	System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, Boolean.FALSE.toString());
+        String patternStr = "^tid=\\d{1,12} INFO "+ this.getClass().getName() + " - hello";
         commonTestThreadId(patternStr);
     }
 
     @Test
     public void testThreadId() {
-        String patternStr = "^\\[.*\\] tid=\\d{1,12} INFO org.slf4j.simple.SimpleLoggerTest - hello";
+    	System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.err");
+        String patternStr = "^\\[.*\\] tid=\\d{1,12} INFO "+ this.getClass().getName() + " - hello";
         commonTestThreadId(patternStr);
     }
 

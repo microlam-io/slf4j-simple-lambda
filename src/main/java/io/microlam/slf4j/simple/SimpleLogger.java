@@ -54,8 +54,8 @@ import io.microlam.slf4j.simple.SimpleLoggerConfiguration.NewlineMethod;
  *
  * <ul>
  * <li><code>org.slf4j.simpleLogger.logFile</code> - The output target which can
- * be the <em>path</em> to a file, or the special values "System.out" and
- * "System.err". Default is "LAMBDA".</li>
+ * be the <em>path</em> to a file, or the special values "LAMBDA", "System.out" and
+ * "System.err". Default is "System.err".</li>
  * 
  * <li><code>org.slf4j.simpleLogger.cacheOutputStream</code> - If the output
  * target is set to "System.out" or "System.err" (see preceding entry), by

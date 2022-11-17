@@ -32,8 +32,6 @@ import org.slf4j.LoggerFactoryFriend;
 import org.slf4j.helpers.StringPrintStream;
 import org.slf4j.testHarness.MultithreadedInitializationTest;
 
-import io.microlam.slf4j.simple.SimpleLogger;
-
 public class SimpleLoggerMultithreadedInitializationTest extends MultithreadedInitializationTest {
     // final static int THREAD_COUNT = 4 + Runtime.getRuntime().availableProcessors() * 2;
     // private final List<Logger> createdLoggers = Collections.synchronizedList(new ArrayList<Logger>());

@@ -13,7 +13,6 @@ import java.util.Properties;
 import org.slf4j.helpers.Util;
 
 import io.microlam.slf4j.simple.OutputChoice.OutputChoiceType;
-import io.microlam.slf4j.simple.SimpleLoggerConfiguration.NewlineMethod;
 
 /**
  * This class holds configuration values for {@link SimpleLogger}. The
@@ -71,7 +70,7 @@ public class SimpleLoggerConfiguration {
     private static final boolean LEVEL_IN_BRACKETS_DEFAULT = false;
     boolean levelInBrackets = LEVEL_IN_BRACKETS_DEFAULT;
 
-    private static String LOG_FILE_DEFAULT = "LAMBDA";
+    private static String LOG_FILE_DEFAULT = "System.err";
     private String logFile = LOG_FILE_DEFAULT;
     OutputChoice outputChoice = null;
 

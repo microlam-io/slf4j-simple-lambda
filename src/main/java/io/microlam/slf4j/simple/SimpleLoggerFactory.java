@@ -60,7 +60,7 @@ public class SimpleLoggerFactory implements ILoggerFactory {
         if (simpleLogger != null) {
             return simpleLogger;
         } else {
-            Logger newInstance = new SimpleLogger(name);
+            Logger newInstance = new SimpleLogger(name, mdcAdapter);
             Logger oldInstance = loggerMap.putIfAbsent(name, newInstance);
             return oldInstance == null ? newInstance : oldInstance;
         }
