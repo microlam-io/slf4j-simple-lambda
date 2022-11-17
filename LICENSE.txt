@@ -1,3 +1,4 @@
+Copyright (c) 2021-2022 Frank Afriat - Solusoft.tech 
 Copyright (c) 2004-2007 QOS.ch
 All rights reserved.
 

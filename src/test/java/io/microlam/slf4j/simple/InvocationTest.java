@@ -22,8 +22,9 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.simple;
+package io.microlam.slf4j.simple;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.io.PrintStream;
@@ -135,7 +136,7 @@ public class InvocationTest {
     @Test
     public void testMDC() {
         MDC.put("k", "v");
-        assertNull(MDC.get("k"));
+        assertNotNull(MDC.get("k"));
         MDC.remove("k");
         assertNull(MDC.get("k"));
         MDC.clear();

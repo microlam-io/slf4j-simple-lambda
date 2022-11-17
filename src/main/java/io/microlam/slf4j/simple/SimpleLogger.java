@@ -22,9 +22,11 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.simple;
+package io.microlam.slf4j.simple;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +39,11 @@ import org.slf4j.helpers.LegacyAbstractLogger;
 import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.helpers.NormalizedParameters;
 import org.slf4j.spi.LocationAwareLogger;
+import org.slf4j.spi.MDCAdapter;
+
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
+
+import io.microlam.slf4j.simple.SimpleLoggerConfiguration.NewlineMethod;
 
 /**
  * <p>
@@ -48,7 +55,7 @@ import org.slf4j.spi.LocationAwareLogger;
  * <ul>
  * <li><code>org.slf4j.simpleLogger.logFile</code> - The output target which can
  * be the <em>path</em> to a file, or the special values "System.out" and
- * "System.err". Default is "System.err".</li>
+ * "System.err". Default is "LAMBDA".</li>
  * 
  * <li><code>org.slf4j.simpleLogger.cacheOutputStream</code> - If the output
  * target is set to "System.out" or "System.err" (see preceding entry), by
@@ -146,6 +153,7 @@ import org.slf4j.spi.LocationAwareLogger;
  * @author Rod Waldhoff
  * @author Robert Burrell Donkin
  * @author C&eacute;drik LIME
+ * @author Frank Afriat
  */
 public class SimpleLogger extends LegacyAbstractLogger {
 
@@ -184,6 +192,9 @@ public class SimpleLogger extends LegacyAbstractLogger {
     static void init() {
         CONFIG_PARAMS.init();
     }
+    
+	protected MDCAdapter mdcAdapter;
+
 
     /** The current log level */
     protected int currentLogLevel = LOG_LEVEL_INFO;
@@ -220,6 +231,8 @@ public class SimpleLogger extends LegacyAbstractLogger {
 
     public static final String DEFAULT_LOG_LEVEL_KEY = SimpleLogger.SYSTEM_PREFIX + "defaultLogLevel";
 
+	public static final String NEWLINE_METHOD_KEY = SimpleLogger.SYSTEM_PREFIX + "newlineMethod";
+
     /**
      * Package access allows only {@link SimpleLoggerFactory} to instantiate
      * SimpleLogger instances.
@@ -234,6 +247,11 @@ public class SimpleLogger extends LegacyAbstractLogger {
             this.currentLogLevel = CONFIG_PARAMS.defaultLogLevel;
         }
     }
+
+	SimpleLogger(String name, MDCAdapter mdcAdapter) {
+		this(name);
+		this.mdcAdapter = mdcAdapter;
+	}
 
     String recursivelyComputeLevelString() {
         String tempName = name;
@@ -255,15 +273,40 @@ public class SimpleLogger extends LegacyAbstractLogger {
      * @param t
      */
     void write(StringBuilder buf, Throwable t) {
-        PrintStream targetStream = CONFIG_PARAMS.outputChoice.getTargetPrintStream();
-
-        synchronized (CONFIG_PARAMS) {
-            targetStream.println(buf.toString());
-            writeThrowable(t, targetStream);
-            targetStream.flush();
-        } 
+		String toLog = printWithThrowable(buf, t);
+		if (CONFIG_PARAMS.outputChoice.isLambda())  {
+			LambdaLogger lambdaLogger = CONFIG_PARAMS.outputChoice.getLambdaLogger();
+			lambdaLogger.log(toLog);
+		}
+		else {
+			PrintStream targetStream = CONFIG_PARAMS.outputChoice.getTargetPrintStream();
+		       synchronized (CONFIG_PARAMS) {
+					targetStream.print(toLog);
+//		            targetStream.println(buf.toString());
+//		            writeThrowable(t, targetStream);
+					targetStream.flush();
+		       }
+		}
 
     }
+
+	protected String printWithThrowable(StringBuilder buf, Throwable t) {
+		StringWriter sw = new StringWriter();
+		sw.append(buf);
+		if (t != null) {
+			sw.append('\n');
+			t.printStackTrace(new PrintWriter(sw));
+		}
+		return useNewlineMethod(sw.toString());
+	}
+
+	static String useNewlineMethod(String none) {
+		if (CONFIG_PARAMS.newlineMethod == NewlineMethod.None) {
+			return none;
+		}
+		String manual = none.replace('\n', '\r') + '\n';
+		return manual;
+	}
 
     protected void writeThrowable(Throwable t, PrintStream targetStream) {
         if (t != null) {
@@ -391,6 +434,15 @@ public class SimpleLogger extends LegacyAbstractLogger {
                 buf.append(SP);
             }
         }
+
+		// Append current aws request id so configured
+		if (CONFIG_PARAMS.showAWSRequestId && (mdcAdapter != null)) {
+			String awsRequestId = mdcAdapter.get("AWSRequestId");
+			
+			buf.append('[');
+			buf.append((awsRequestId != null)?awsRequestId:"Not Found");
+			buf.append("] ");
+		}
 
         // Append current thread name if so configured
         if (CONFIG_PARAMS.showThreadName) {

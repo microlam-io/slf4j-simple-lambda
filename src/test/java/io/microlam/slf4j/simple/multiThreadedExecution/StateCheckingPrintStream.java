@@ -22,7 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.simple.multiThreadedExecution;
+package io.microlam.slf4j.simple.multiThreadedExecution;
 
 import java.io.PrintStream;
 import java.util.regex.Pattern;

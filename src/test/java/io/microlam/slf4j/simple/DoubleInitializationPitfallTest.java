@@ -1,4 +1,4 @@
-package org.slf4j.simple;
+package io.microlam.slf4j.simple;
 
 import static org.junit.Assert.fail;
 

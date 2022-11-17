@@ -22,12 +22,13 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.simple;
+package io.microlam.slf4j.simple;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
+import org.slf4j.spi.MDCAdapter;
 import org.slf4j.ILoggerFactory;
 
 /**
@@ -39,10 +40,16 @@ import org.slf4j.ILoggerFactory;
 public class SimpleLoggerFactory implements ILoggerFactory {
 
     ConcurrentMap<String, Logger> loggerMap;
+    MDCAdapter mdcAdapter;
 
     public SimpleLoggerFactory() {
-        loggerMap = new ConcurrentHashMap<>();
+    	this(null);
+    }
+
+    public SimpleLoggerFactory(MDCAdapter mdcAdapter) {
+        loggerMap = new ConcurrentHashMap<String, Logger>();
         SimpleLogger.lazyInit();
+        this.mdcAdapter = mdcAdapter;
     }
 
     /**

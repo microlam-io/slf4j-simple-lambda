@@ -1,4 +1,4 @@
-package org.slf4j.simple;
+package io.microlam.slf4j.simple;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,7 +11,9 @@ import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 import org.slf4j.helpers.Util;
-import org.slf4j.simple.OutputChoice.OutputChoiceType;
+
+import io.microlam.slf4j.simple.OutputChoice.OutputChoiceType;
+import io.microlam.slf4j.simple.SimpleLoggerConfiguration.NewlineMethod;
 
 /**
  * This class holds configuration values for {@link SimpleLogger}. The
@@ -24,10 +26,15 @@ import org.slf4j.simple.OutputChoice.OutputChoiceType;
  * @author Rod Waldhoff
  * @author Robert Burrell Donkin
  * @author C&eacute;drik LIME
+ * @author Frank Afriat
  * 
  * @since 1.7.25
  */
 public class SimpleLoggerConfiguration {
+
+    enum NewlineMethod {
+        None, Manual;
+    }
 
     private static final String CONFIGURATION_FILE = "simplelogger.properties";
 
@@ -51,7 +58,10 @@ public class SimpleLoggerConfiguration {
      */
     private static final boolean SHOW_THREAD_ID_DEFAULT = false;
     boolean showThreadId = SHOW_THREAD_ID_DEFAULT;
-    
+
+    private static final boolean SHOW_AWS_REQUEST_ID_DEFAULT = true;
+    boolean showAWSRequestId = SHOW_AWS_REQUEST_ID_DEFAULT;
+
     final static boolean SHOW_LOG_NAME_DEFAULT = true;
     boolean showLogName = SHOW_LOG_NAME_DEFAULT;
 
@@ -61,7 +71,7 @@ public class SimpleLoggerConfiguration {
     private static final boolean LEVEL_IN_BRACKETS_DEFAULT = false;
     boolean levelInBrackets = LEVEL_IN_BRACKETS_DEFAULT;
 
-    private static final String LOG_FILE_DEFAULT = "System.err";
+    private static String LOG_FILE_DEFAULT = "LAMBDA";
     private String logFile = LOG_FILE_DEFAULT;
     OutputChoice outputChoice = null;
 
@@ -70,6 +80,9 @@ public class SimpleLoggerConfiguration {
 
     private static final String WARN_LEVELS_STRING_DEFAULT = "WARN";
     String warnLevelString = WARN_LEVELS_STRING_DEFAULT;
+    
+    private static final String NEWLINE_METHOD_DEFAULT = "Auto";
+    NewlineMethod newlineMethod = NewlineMethod.None;
 
     private final Properties properties = new Properties();
 
@@ -93,6 +106,9 @@ public class SimpleLoggerConfiguration {
 
         cacheOutputStream = getBooleanProperty(SimpleLogger.CACHE_OUTPUT_STREAM_STRING_KEY, CACHE_OUTPUT_STREAM_DEFAULT);
         outputChoice = computeOutputChoice(logFile, cacheOutputStream);
+
+        String newlineMethodStr = getStringProperty(SimpleLogger.NEWLINE_METHOD_KEY, NEWLINE_METHOD_DEFAULT);
+        newlineMethod = stringToNewlineMethod(newlineMethodStr);
 
         if (dateTimeFormatStr != null) {
             try {
@@ -166,6 +182,19 @@ public class SimpleLoggerConfiguration {
         return SimpleLogger.LOG_LEVEL_INFO;
     }
 
+    static NewlineMethod stringToNewlineMethod(String newlineMethodStr) {
+    	String lowercase = newlineMethodStr.toLowerCase();
+    	switch(lowercase) {
+    		case "none": return NewlineMethod.None;
+    		case "auto": {
+    			String mode = System.getenv("_LAMBDA_TELEMETRY_LOG_FD"); 
+    			return (mode == null)?NewlineMethod.Manual:NewlineMethod.None;
+    		}
+    		case "manual": return NewlineMethod.Manual;
+    		default : return NewlineMethod.None;
+    	}
+    }
+
     private static OutputChoice computeOutputChoice(String logFile, boolean cacheOutputStream) {
         if ("System.err".equalsIgnoreCase(logFile))
             if (cacheOutputStream)
@@ -177,6 +206,8 @@ public class SimpleLoggerConfiguration {
                 return new OutputChoice(OutputChoiceType.CACHED_SYS_OUT);
             else
                 return new OutputChoice(OutputChoiceType.SYS_OUT);
+        } else if ("LAMBDA".equalsIgnoreCase(logFile)) {
+        	return new OutputChoice(OutputChoiceType.LAMBDA);
         } else {
             try {
                 FileOutputStream fos = new FileOutputStream(logFile);

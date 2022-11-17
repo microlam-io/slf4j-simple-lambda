@@ -1,7 +1,8 @@
-package org.slf4j.simple;
+package io.microlam.slf4j.simple;
 
 import org.slf4j.ILoggerFactory;
 import org.slf4j.IMarkerFactory;
+import org.slf4j.helpers.BasicMDCAdapter;
 import org.slf4j.helpers.BasicMarkerFactory;
 import org.slf4j.helpers.NOPMDCAdapter;
 import org.slf4j.spi.MDCAdapter;
@@ -41,10 +42,9 @@ public class SimpleServiceProvider implements SLF4JServiceProvider {
 
     @Override
     public void initialize() {
-
-        loggerFactory = new SimpleLoggerFactory();
+  	  	mdcAdapter = new BasicMDCAdapter();
+        loggerFactory = new SimpleLoggerFactory(mdcAdapter);
         markerFactory = new BasicMarkerFactory();
-        mdcAdapter = new NOPMDCAdapter();
     }
 
 }
